@@ -1,6 +1,16 @@
 import Image from "next/image";
 
-export default function Home() {
+type Props = {
+  id: number,
+  title: string,
+}
+
+export default async function Home() {
+  const response = await fetch("https://jsonplaceholder.typicode.com/albums");
+  if (!response.ok) throw new Error("Failed to fetch data");
+
+  const albums = await response.json();
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -13,14 +23,16 @@ export default function Home() {
           priority
         />
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
+          {albums.map((album: Props) => (
+
+          <li key={album.id} className="mb-2">            
             <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
+              {album.title}
+              Album: {album.id}
             </code>
             .
           </li>
-          <li>Save and see your changes instantly.</li>
+          ))}
         </ol>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
